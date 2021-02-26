@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Edit conference</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <form action="#" th:action="@{/conference/{id}/edit(id=${conference.id})}" th:object="${conference}" method="post">
+            <div class="form-group">
+                <label for="title" th:text="#{TitleInscription}"></label>
+                <input class="form-control" type="text" th:field="*{title}" id="title" th:placeholder="#{TitleInscription}">
+            </div>
+            <div class="form-group">
+                <label for="location" th:text="#{LocationInscription}"></label>
+                <input class="form-control" type="text" th:field="*{location}" id="location" th:placeholder="#{LocationInscription}">
+            </div>
+            <div class="form-group">
+                <label for="date" th:text="#{DateInscription}"></label>
+                <input class="form-control" type="date" th:field="*{date}" id="date" th:placeholder="DateInscription">
+            </div>
+            <div class="form-group">
+                <label for="title" th:text="#{ActualParticipantsCountInscription}"></label>
+                <input class="form-control" type="number" th:field="*{actualParticipantsCount}" id="actualParticipantsCount" th:placeholder="#{ActualParticipantsCountInscription}">
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{editButton}"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

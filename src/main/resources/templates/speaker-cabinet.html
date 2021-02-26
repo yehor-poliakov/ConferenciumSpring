@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Presentations</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="#{speakerCabinetInscription}"/>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="align-text-top" scope="col" th:text="#{TitleInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{topicInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{LocationInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{DateInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{timeInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{presentationApprovedInscription}"></th>
+            <th class="align-text-top" scope="col" th:text="#{speakerApprovedInscription}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="transform: rotate(0);" th:each="p : ${page.content}">
+            <td><a th:href="@{/conference/{id}(id=${p.conferenceId})}" th:text="${p.conferenceTitle}"></a></td>
+            <td th:text="${p.presentationTopic}"></td>
+            <td th:text="${p.conferenceLocation}"></td>
+            <td th:text="${#temporals.format(p.conferenceDate, 'dd-MM-yyyy')}"></td>
+            <td th:text="${p.presentationTime}"></td>
+            <td>
+                <input type="checkbox" disabled
+                       th:checked="${p.speakerApproved}"/>
+            </td>
+            <td>
+                <input type="checkbox" disabled
+                       th:checked="${p.presentationApproved}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : disabled"><a class="page-link" th:href="@{/speaker(page=${page.number-1},size=${page.size})}">Previous</a></li>
+            <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                <li th:classappend="${page.number == i} ? active : ''" class="page-item">
+                    <a class="page-link" th:href="@{/speaker(page=${i},size=${page.size})}">[[${i}+1]]</a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${page.hasNext()} ? '' : disabled" ><a class="page-link" th:href="@{/speaker(page=${page.number+1},size=${page.size})}">Next</a></li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

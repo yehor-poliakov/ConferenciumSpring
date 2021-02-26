@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Create conference</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div sec:authorize="hasRole('MODERATOR')" class="row">
+        <form action="#" th:action="@{/conference/create}" th:object="${conference}" method="post">
+            <div class="form-group">
+                <label for="title" th:text="#{TitleInscription}"></label>
+                <input class="form-control" type="text" th:field="*{title}" id="title" th:placeholder="#{TitleInscription}">
+                <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</div>
+                <br/>
+            </div>
+            <div class="form-group">
+                <label for="location" th:text="#{LocationInscription}"></label>
+                <input class="form-control" type="text" th:field="*{location}" id="location" th:placeholder="#{LocationInscription}">
+            </div>
+            <div class="form-group">
+                <label for="date" th:text="#{DateInscription}"></label>
+                <input class="form-control" type="date" th:field="*{date}" id="date" th:placeholder="#{DateInscription}">
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{addConferenceButton}"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

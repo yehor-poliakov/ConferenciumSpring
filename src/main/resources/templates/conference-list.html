@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Conferences</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <div th:switch="${page.content}">
+            <div class="row mt-2">
+                <div class="filter-panel">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form sec:authorize="hasAnyRole('MODERATOR')" class="form-check-inline"
+                                  th:action="@{/conference/create}">
+                                <button class="btn btn-success" type="submit" th:text="#{newConferenceLink}" style="margin-top:-.5rem;"></button>
+                            </form>
+                            <form method="get" th:object="${filters}">
+                                <div class="form-row">
+                                    <div class="col-auto ml-3 pt-1">
+                                        <div class="form-check align-items-center h-100">
+                                            <input class="form-check-input align-text-bottom mt-9" type="checkbox"
+                                                   th:field="*{showPast}"
+                                                   id="showPast" onChange="this.form.submit()">
+                                            <label class="form-check-label align-text-bottom mt-9" for="showPast"
+                                                   th:text="#{pastEventsCheckbox}">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto pt-1">
+                                        <div class="form-check align-items-center h-100">
+                                            <input class="form-check-input align-text-bottom mt-9" type="checkbox"
+                                                   th:field="*{showFuture}"
+                                                   id="showFuture" onChange="this.form.submit()">
+                                            <label class="form-check-label align-text-bottom mt-9" for="showFuture"
+                                                   th:text="#{futureEventsCheckbox}">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="input-group mb-2 align-items-center">
+                                            <label class="filter-col align-text-bottom mb-0 mr-0" for="orderby"
+                                                   th:text="#{orderByOption}"></label>
+                                            <select name="orderby" th:field="*{orderby}" id="orderby"
+                                                    class="form-control custom-select custom-select-sm ml-2 mb-0 align-center"
+                                                    onChange="this.form.submit()">
+                                                <option value="DateDesc" th:text="#{dateDescForm}"></option>
+                                                <option value="DateAsc" th:text="#{dateAscForm}"></option>
+                                                <option value="PresentationsDesc" th:text="#{presDescForm}"></option>
+                                                <option value="PresentationsAsc" th:text="#{presAscForm}"></option>
+                                                <option value="ParticipantsDesc" th:text="#{partisDescForm}"></option>
+                                                <option value="ParticipantsAsc" th:text="#{partisAscForm}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 th:case="null">No conferences found!</h1>
+            <div th:case="*">
+                <div class="row" th:each="c, state : ${page.content}" th:if="${state.index} % 3 == 0">
+                    <div class="col-xs-6 col-lg-4 card"
+                         th:each="conference, counter : ${page.content}"
+                         th:if="${counter.index} >= ${state.index} AND ${counter.index} < ${state.index + 3}"
+                    >
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${conference.title}"></h5>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${conference.location}"></h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"
+                                    th:text="#{DateInscription} + ': ' +
+                                            ${#temporals.format(conference.date, 'dd-MM-yyyy')}"></li>
+                                <li class="list-group-item"
+                                    th:text="#{PresentationsNumberInscription} + ': ' + ${conference.presentationsCount}"></li>
+                                <li class="list-group-item"
+                                    th:text="#{ParticipantsNumberInscription} + ': ' + ${conference.participantsCount}"></li>
+                            </ul>
+
+                            <a th:href="@{/conference/{id}(id=${conference.id})}"
+                               class="btn btn-primary link" th:text="#{viewButton}"></a>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <nav style="margin-top:40px;">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : disabled"><a class="page-link"
+                                                                                                th:href="@{/conferences(page=${page.number-1},size=${page.size})}">Previous</a>
+                </li>
+                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                    <li th:classappend="${page.number == i} ? active : ''" class="page-item">
+                        <a class="page-link" th:href="@{/conferences(page=${i},size=${page.size})}">[[${i}+1]]</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${page.hasNext()} ? '' : disabled"><a class="page-link"
+                                                                                            th:href="@{/conferences(page=${page.number+1},size=${page.size})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

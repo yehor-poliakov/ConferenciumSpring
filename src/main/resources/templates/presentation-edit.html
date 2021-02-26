@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Edit presentation</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <form action="#" th:action="@{/presentation/{id}(id=${presentation.id})}" th:object="${presentation}" method="post">
+            <div class="form-group">
+                <label for="topic" th:text="#{topicInscription}"></label>
+                <input class="form-control" type="text" th:field="*{topic}" id="topic" th:placeholder="#{topicInscription}">
+            </div>
+            <div class="form-group">
+                <label for="time" th:text="#{timeInscription}"></label>
+                <input class="form-control" type="time" th:field="*{time}" id="time" th:placeholder="#{timeInscription}">
+            </div>
+
+            <select class="form-select" th:field="*{speakerId}">
+                <option th:value="${null}" th:text="#{noSpeakerYetForm}" selected></option>
+                <option th:each="speaker: ${speakers}" th:value="${speaker.id}" th:text="${speaker.name}">
+            </select>
+
+            <div class="form-check mt-1">
+                <input class="form-check-input" type="checkbox" th:field="*{speakerApproved}" id="speakerApproved" th:placeholder="#{speakerApprovedInscription}">
+                <label for="speakerApproved" th:text="#{speakerApprovedInscription}"></label>
+            </div>
+
+            <div class="form-check-inline">
+                <input class="form-check-input" type="checkbox" th:field="*{presentationApproved}"
+                       id="presentationApproved" th:placeholder="#{presentationApprovedInscription}">
+                <label for="presentationApproved" th:text="#{presentationApprovedInscription}"></label>
+            </div>
+
+            <input type="hidden" th:field="*{conferenceId}"/>
+            <button type="submit" class="btn btn-primary" th:text="#{editPresentationButton}"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

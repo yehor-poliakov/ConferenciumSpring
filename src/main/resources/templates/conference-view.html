@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="${conference.title}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <h1 th:text="${conference.title}"/>
+        <p th:text="${conference.location}"></p>
+        <p th:text="${#temporals.format(conference.date, 'dd-MM-yyyy')}"></p>
+
+        <a sec:authorize="hasAnyRole('MODERATOR')" th:href="@{/conference/{id}/edit(id=${conference.id})}"
+           class="btn btn-primary" th:text="#{editButton}"></a>
+        <form sec:authorize="hasAnyRole('PARTICIPANT')" th:unless="${conference.registered}"
+              th:action="@{/conference/{id}/signup(id=${conference.id})}" method="post">
+            <button class="btn btn-primary" type="submit" th:text="#{registerButton}"></button>
+        </form>
+        <form sec:authorize="hasAnyRole('PARTICIPANT')" th:if="${conference.registered}"
+              th:action="@{/conference/{id}/signout(id=${conference.id})}" method="post">
+            <button class="btn btn-danger" type="submit" th:text="#{unregisterButton}"></button>
+        </form>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{topicInscription}"></th>
+                <th scope="col" th:text="#{timeInscription}"></th>
+                <th scope="col" th:text="#{speakerInscription}"></th>
+                <th scope="col" th:text="#{speakerApprovedInscription}"
+                    sec:authorize="hasAnyRole('SPEAKER', 'MODERATOR')"></th>
+                <th scope="col" th:text="#{presentationApprovedInscription}"
+                    sec:authorize="hasAnyRole('SPEAKER', 'MODERATOR')"></th>
+                <th scope="col" sec:authorize="hasAnyRole('MODERATOR')"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="transform: rotate(0);" th:each="presentation : ${conference.presentations}"
+                th:switch="${presentation.speaker}">
+                <th scope="col">
+                    <a sec:authorize="hasAnyRole('MODERATOR')" th:text="${presentation.topic}"
+                       th:href="@{/presentation/{id}(id=${presentation.id})}">&nbsp;</a>
+                    <b sec:authorize="hasAnyRole('SPEAKER','PARTICIPANT')" th:text="${presentation.topic}"></b>
+                </th>
+                <td th:text="${presentation.time}"></td>
+
+                <td sec:authorize="hasAnyRole('SPEAKER')" th:case="''">
+                    <form th:action="@{/presentation/{id}/suggest-speaker(id=${presentation.id})}" method="post">
+                        <button class="btn-primary" type="submit" th:text="#{speakerApplyInscription}"></button>
+                    </form>
+                </td>
+                <td th:case="*" th:text="${presentation.speaker}"></td>
+
+                <td sec:authorize="hasAnyRole('SPEAKER', 'MODERATOR')">
+                    <input type="checkbox" disabled
+                           th:checked="${presentation.speakerApproved}"/>
+                </td>
+                <td sec:authorize="hasAnyRole('SPEAKER', 'MODERATOR')">
+                    <input type="checkbox" disabled
+                           th:checked="${presentation.presentationApproved}"/>
+                </td>
+                <td sec:authorize="hasAnyRole('MODERATOR')">
+                    <form th:action="@{'/presentation/' + ${presentation.id} + '/delete/' + ${conference.id}}" method="post">
+                        <button class="btn btn-danger mt-1" type="submit" th:text="#{deletePresentationButton}"></button>
+                    </form>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form sec:authorize="hasAnyRole('MODERATOR')"
+          th:action="@{/presentation/create/{id}(id=${conference.id})}">
+        <button class="btn btn-success" type="submit" th:text="#{newPresentationLink}"></button>
+    </form>
+
+    <form sec:authorize="hasAnyRole('MODERATOR')"
+          th:action="@{/conference/{id}/delete(id=${conference.id})}" method="post">
+        <button class="btn btn-danger mt-1" type="submit" th:text="#{deleteConferenceButton}"></button>
+    </form>
+
+    <form sec:authorize="hasAnyRole('SPEAKER')"
+          th:action="@{/presentation/suggest/{id}(id=${conference.id})}">
+        <button class="btn btn-success mt-1" type="submit" th:text="#{suggestPresentationButton}"></button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Conferences</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+</head>
+<body>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/internationalization.js"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/conferences" style="font-weight:bold" th:text="#{applicationInscription}"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/conferences" th:text="#{conferenceInscription}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyRole('SPEAKER')">
+                <a class="nav-link" href="/speaker" th:text="#{cabinetButton}"></a>
+            </li>
+        </ul>
+        <div class="my-2 my-lg-0">
+            <input class="form-inline-check-input" type="radio" name="lang" id="flexRadioDefault1" value="ua"
+                   th:checked="${#strings.equals(#locale, 'us')}?false:true"/>
+            <label class="form-check-label mr-1" for="flexRadioDefault1">
+                Українська
+            </label>
+            <input class="form-inline-check-input" type="radio" name="lang" id="flexRadioDefault2" value="US"
+                   th:checked="${#strings.equals(#locale, 'us')}?true:false"/>
+            <label class="form-check-label" for="flexRadioDefault2">
+                English
+            </label>
+        </div>
+        <div class="my-2 my-lg-0 ml-2">
+            <form class="form-inline my-2 my-lg-0" sec:authorize="isAuthenticated()" th:action="@{/logout}"
+                  method="post">
+                <button class="btn btn-primary my-2 my-sm-0" type="submit" th:text="#{logoutButton}"/>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div layout:fragment="shared-header"></div>
+    <div layout:fragment="content"></div>
+</div>
+
+</body>
+</html>

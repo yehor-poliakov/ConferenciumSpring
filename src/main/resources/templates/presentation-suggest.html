@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Suggest presentation</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <form action="#" th:action="@{/presentation/suggest}" th:object="${presentation}" method="post">
+            <div class="form-group">
+                <label for="topic" th:text="#{topicInscription}"></label>
+                <input class="form-control" type="text" th:field="*{topic}" id="topic" th:placeholder="#{topicInscription}">
+            </div>
+            <div class="form-group">
+                <label for="time" th:text="#{timeInscription}"></label>
+                <input class="form-control" type="time" th:field="*{time}" id="time" th:placeholder="#{timeInscription}">
+            </div>
+            <input type="hidden" th:field="*{conferenceId}"/>
+            <button type="submit" class="btn btn-primary" th:text="#{addPresentationButton}"></button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

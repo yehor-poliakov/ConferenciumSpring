@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css"/>
+</head>
+<body>
+<div layout:fragment="content" class="text-center box">
+    <form th:action="@{/login}" class="form-signin" method="post">
+        <h1 class="h3 mb-3 font-weight-normal" th:text="#{pleaseSignInInscription}"></h1>
+        <div class="alert alert-danger" th:if="${param.error}" th:text="#{invalidLogin}">
+        </div>
+        <div class="alert alert-warning" th:if="${param.logout}" th:text="#{loggedOut}">
+        </div>
+        <input type="email" name="username" class="form-control" th:placeholder="#{emailPlaceholder}" required/>
+        <input type="password" name="password" class="form-control" th:placeholder="#{passwordPlaceholder}" required/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{loginButton}"></button>
+    </form>
+    <form class="form-signin" action="/register">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{signupButton}"></button>
+    </form>
+</div>
+</body>
+</html>

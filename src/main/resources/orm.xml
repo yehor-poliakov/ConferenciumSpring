@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        version="2.2">
+    <named-native-query name="Conference.findAllDesc">
+        <query>
+            SELECT
+            c.*
+            FROM
+            Conference c
+            LEFT JOIN (
+            SELECT
+            p.conference_id,
+            COUNT(*) as presentations
+            FROM
+            Presentation p
+            GROUP BY
+            p.conference_id
+            ) presentation_counts ON conference_id = c.id
+            LEFT JOIN (
+            SELECT
+            p.conference_id,
+            COUNT(*) as participants
+            FROM
+            Conference_participants cp
+            GROUP BY
+            cp.conference_id
+            ) participants_counts ON cp.conference_id = c.id
+            WHERE
+            (
+            ?1
+            OR c.date &gt;= CURDATE()
+            )
+            AND (
+            ?2
+            OR c.date &lt;= CURDATE()
+            )
+            ORDER BY
+            ?3 DESC
+        </query>
+    </named-native-query>
+    <named-native-query name="Conference.findAllAsc">
+        <query>
+            SELECT
+            c.*
+            FROM
+            Conference c
+            LEFT JOIN (
+            SELECT
+            p.conference_id,
+            COUNT(*) as presentations
+            FROM
+            Presentation p
+            GROUP BY
+            p.conference_id
+            ) presentations_counts ON conference_id = c.id
+            LEFT JOIN (
+            SELECT
+            p.conference_id,
+            COUNT(*) as participants
+            FROM
+            Conference_participants cp
+            GROUP BY
+            cp.conference_id
+            ) participants_counts ON cp.conference_id = c.id
+            WHERE
+            (
+            ?1
+            OR c.date &gt;= CURDATE()
+            )
+            AND (
+            ?2
+            OR c.date &lt;= CURDATE()
+            )
+            ORDER BY ?3 ASC
+        </query>
+    </named-native-query>
+</entity-mappings>
