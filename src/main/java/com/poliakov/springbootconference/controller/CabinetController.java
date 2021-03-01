@@ -36,7 +36,7 @@ public class CabinetController {
     @GetMapping("/speaker")
     @RolesAllowed({"SPEAKER"})
     public String speakerCabinet(Model model, HttpServletRequest request,
-                                 @PageableDefault(size = 10) Pageable pageable) {
+                                 @PageableDefault(size = 5) Pageable pageable) {
         Optional<User> user = userService.getCurrentUser(request);
         if (!user.isPresent()) {
             throw new ResourceNotFoundException();
